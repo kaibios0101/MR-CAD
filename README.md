@@ -2,11 +2,11 @@
 
 This repository includes scripts to reproduce the main results presented in the following paper:
 
-Kai Wang, Xian Shi, Ziwei Zhu, Xingjie Hao, Shanshan Cheng, Roger S. Y. Foo, Chaolong Wang*. Trans-ancestry Mendelian randomization analysis of 37 clinical factors and coronary artery disease. *Genome Medicine*.
+Kai Wang, Xian Shi, Ziwei Zhu, Xingjie Hao, Liangkai Chen, Shanshan Cheng, Roger S. Y. Foo and Chaolong Wang*. Mendelian randomization analysis of 37 clinical factors and coronary artery disease in East Asian and European populations. *Genome Medicine*.
 
 In the following sections, we will describe step by step how to reproduce the results. The scripts are placed into three directories. Please enter into each of these directories and run the scripts according to the description described below. **The scripts here are meant for reproduction of the results in the paper only.**
 
-## Step 1: 1_data_preparation
+## 1_data_preparation
 
 Run the following scripts sequentially to download the raw GWAS summary statistics of each trait, tidy the summary data, and meta-analyze the summary data. **Specify the working directory at the start of each script.**
 
@@ -17,7 +17,7 @@ Run the following scripts sequentially to download the raw GWAS summary statisti
 
 3. `2_meta_EAS_EUR.sh`: meta-analyze the processed GWAS summary data from East Asian and European populations.
 
-## Step 2: 2_heritability_genetic_correlation
+## 2_heritability_genetic_correlation
 
 Run the following scripts sequentially to compute SNP-based heritability and genetic correlations among traits. **Specify the working directory at the start of each script.**
 
@@ -26,7 +26,7 @@ Run the following scripts sequentially to compute SNP-based heritability and gen
 3. `2_genetic_correlation_EAS.sh`: compute genetic correlations among traits in East Asian population.
 4. `2_genetic_correlation_EUR.sh`: compute genetic correlations among traits in East Asian population.
 
-## Step 3: 3_MR_analysis
+## 3_MR_analysis
 
 Run the following scripts sequentially to select candidate instrumental variables (IVs), and perform univariable MR (UVMR) and multivariable MR (MVMR) analyses. **Specify the working directory at the start of each script**.
 
