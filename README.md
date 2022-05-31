@@ -1,4 +1,4 @@
-# Mendelian randomization analysis of 37 clinical factors and coronary artery disease in East Asian and European populations
+# MR of coronary artery disease
 
 This repository includes scripts to reproduce the main results presented in the following paper:
 
