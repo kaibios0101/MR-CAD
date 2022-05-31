@@ -1,0 +1,42 @@
+################################################################
+#  Descriptive: 
+#    replace the chr pos with rsid based on dbsnp154 GRCh37
+#  
+#    
+#  Author: 
+#    kai wang
+#
+#  Date:
+#    03/23/2022
+#
+#  Revised Author: 
+#
+#  Date:
+#        
+#
+#  Revised data: 
+#################################################################
+
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -N example
+#PBS -q cu
+#PBS -l mem=10G
+set -euo
+
+##Usage: qsub s1_chrpos_2_rsid_UKB.pbs -F "[input file] [chr] [trait name]" 
+
+##example:
+# for i in {1..22}
+# do
+# sleep 3
+# qsub s1_chrpos_2_rsid_UKB.pbs -F "48_irnt.gwas.imputed_v3.both_sexes.tsv.bgz $i waist.irnt"
+# done
+
+#compute the PRS score
+  dir1=/opt/resource/dbsnp154_vcf
+  dir2=/work_dir/data/summary_data/UKBB_NEALE
+  awk 'BEGIN{FS="\t"; OFS="\t"}FNR==NR{a[$1]=$0}FNR<NR&&($1":"$2":"$4":"$5 in a){print a[$1":"$2":"$4":"$5], $0}' <(zcat $dir2/download/$1) <(zcat $dir1/dbsnp154.hg37.chr$2.pos.gz) > $dir2/clean/$3.chr$2.tmp1
+  awk 'BEGIN{FS="\t"; OFS="\t"}FNR==NR{a[$1]=$0}FNR<NR&&($1":"$2":"$5":"$4 in a){print a[$1":"$2":"$5":"$4], $0}' <(zcat $dir2/download/$1) <(zcat $dir1/dbsnp154.hg37.chr$2.pos.gz) > $dir2/clean/$3.chr$2.tmp2
+#

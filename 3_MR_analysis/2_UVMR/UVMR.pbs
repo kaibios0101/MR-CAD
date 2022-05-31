@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -N tsmr.cad
+#PBS -q cu
+#PBS -l mem=20G
+set -euo
+
+##Usage: qsub UVMR.pbs -F "[1.project dir] [2.e.name] [3.o.name] [4.meta] [5.IV.file.name] [6.o.sum_stats.file] [7.pleio.list] [8.n_iter] [9.mr.corr.b.prior] [10.n_iter_MRCorr]
+#  [11.effective.smp.size.e] [12.binary.e] [13.prevalence.in.pop.e] [14.output.dir] [15.binary.o] [16.prop.smp.overlap] [17.prop.case.o] [18.Pop] [19.SD.scale.parameter]"
+
+Rscript400 UVMR.r ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17} ${18} ${19}

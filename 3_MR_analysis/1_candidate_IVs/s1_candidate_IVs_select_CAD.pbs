@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -N example
+#PBS -q cu
+#PBS -l mem=3G
+set -euo
+
+#step 1: we need to keep the variants which existed in both the BBJ and UKBB 
+    dir1=/work_dir/project/doctoral_project/MR/MR_BBJ_UKBB/${1}_CAD/meta/data/IV
+    cd $dir1
+
+    zcat /work_dir/data/summary_data/meta/BBJ_UKBB/MR/clean/meta.${1}.v21.C4D.FinG.gz | sed '/?/d' | sed '/-+/d' | sed '/+-/d' | bgzip > $dir1/meta.${1}.tmp.gz
+##
+
+#step 2: extract the candidate IV in each population
+  #East asian population 
+    #prepare the IVs; we use the clumping function to extract independent SNPs based on the east asian reference panel
+      plink1.9  --bfile /opt/resource/1000G_phase3_b37_hdr_fixed/plinkfile/EAS/1000gp3_EAS_GRCh37.autosome  \
+                --clump $dir1/meta.${1}.tmp.gz \
+                --clump-p1 ${2} \
+                --clump-p2 1 \
+                --clump-r2 ${3} \
+                --clump-kb ${4} \
+                --out ${1}
+      
+    #extract the sum.stats using the selected significant SNPs
+      cat <(cat $dir1/${1}.clumped | sed -n 1p | awk '{print "SNP", "CHR", "POS", "P"}' OFS="\t") \
+          <(cat $dir1/${1}.clumped | sed 1d    | awk '{print $3, $1, $4, $5}' OFS="\t") > $dir1/IV.${1}.tmp1
+
+      awk 'BEGIN{FS="\t"; OFS="\t"}FNR==NR{a[$1]=$0}FNR<NR&&($1 in a){print a[$1], $0}' \
+            $dir1/IV.${1}.tmp1 \
+            <(zcat $dir1/meta.${1}.tmp.gz) \
+            > $dir1/IV.${1}.tmp2
+
+      cat $dir1/IV.${1}.tmp2 | cut -f 4,5 --complement > $dir1/IV.BBJ.${1}
+      rm  $dir1/IV.${1}.tmp* $dir1/${1}.*
+  ##
+
+  #European population
+    #prepare the IVs; we use the clumping function to extract independent SNPs based on the european reference panel
+      plink1.9  --bfile /opt/resource/1000G_phase3_b37_hdr_fixed/plinkfile/EUR/1000gp3_EUR_GRCh37.autosome  \
+                --clump $dir1/IV.BBJ.${1} \
+                --clump-p1 ${2} \
+                --clump-p2 1 \
+                --clump-r2 ${3} \
+                --clump-kb ${4} \
+                --out ${1}
+
+    #extract the sum.stats using the selected significant SNPs
+    cat <(cat $dir1/${1}.clumped | sed -n 1p | awk '{print "SNP", "CHR", "POS", "P"}' OFS="\t") \
+        <(cat $dir1/${1}.clumped | sed 1d    | awk '{print $3, $1, $4, $5}' OFS="\t") > $dir1/IV.${1}.tmp1
+              
+    awk 'BEGIN{FS="\t"; OFS="\t"}FNR==NR{a[$1]=$0}FNR<NR&&($1 in a){print a[$1], $0}' \
+          $dir1/IV.${1}.tmp1 \
+          <(zcat $dir1/meta.${1}.tmp.gz) \
+          > $dir1/IV.${1}.tmp2
+                                                  
+    cat $dir1/IV.${1}.tmp2 | cut -f1 > $dir1/IV.intersection.rsid.${1}
+    rm  $dir1/IV.${1}.tmp* $dir1/${1}.*
+  ##
+##
+
+#step 3: extract the shared IV info
+  #extract the IV (intersection) info from BBJ
+    awk 'BEGIN{FS="\t"; OFS="\t"}FNR==NR{a[$1]=$0}FNR<NR&&($1 in a){print a[$1], $0}' \
+          $dir1/IV.intersection.rsid.${1} \
+          <(zcat /work_dir/data/summary_data/BBJ/${1}/hum0014_v21_CAD_v1/${1}.v21.sumstats.gz) \
+          > $dir1/IV.${1}.intersection.list.BBJ.tmp1 
+    cat $dir1/IV.${1}.intersection.list.BBJ.tmp1 | cut -f 2- > $dir1/IV.${1}.intersection.BBJ                               
+  ##
+  #extract the IV (intersection) info from UKBB
+    awk 'BEGIN{FS="\t"; OFS="\t"}FNR==NR{a[$1]=$0}FNR<NR&&($1 in a){print a[$1], $0}' \
+          $dir1/IV.intersection.rsid.${1} \
+          <(zcat /work_dir/data/summary_data/FinnGen/IHD/meta.${1}.C4D.FinG.sumstats.gz) \
+          > $dir1/IV.${1}.intersection.list.UKBB.tmp1                 
+    cat $dir1/IV.${1}.intersection.list.UKBB.tmp1 | cut -f 2- > $dir1/IV.${1}.intersection.UKBB
+  ##
+  rm $dir1/*tmp*
+##

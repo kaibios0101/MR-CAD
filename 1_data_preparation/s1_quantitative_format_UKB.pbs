@@ -1,0 +1,52 @@
+################################################################
+#  Descriptive: 
+#    tidy the GWAS summary statistics from UKB 
+#    
+#  Author: 
+#    kai wang
+#
+#  Date:
+#    03/23/2022
+#
+#  Revised Author:
+#
+#  Revised data:
+#################################################################
+
+#!/bin/bash
+
+#PBS -l nodes=1:ppn=1
+#PBS -N example
+#PBS -q cu
+#PBS -l mem=10G
+set -euo
+
+##Usage: qsub s1_quantitative_format_UKB.pbs -F "[trait]" 
+
+##waist.irnt
+  dir2=/work_dir/data/summary_data/UKBB_NEALE
+
+  rm $dir2/clean/$1.chrall.tmp1
+  rm $dir2/clean/$1.sumstats.gz
+
+  #pool all chr
+    for i in {1..22}
+      do
+      cat <(cat $dir2/clean/$1.chr$i.tmp1 | cut -f 2,3,5,8,9,11-16 | awk 'BEGIN{FS="\t"; OFS="\t"}{print $9, $7, $8, $11, $10, $4, $5, $6, $3, $1, $2}') \
+          <(cat $dir2/clean/$1.chr$i.tmp2 | cut -f 2,3,5,8,9,11-16 | awk 'BEGIN{FS="\t"; OFS="\t"}{print $9, $7, $8, $10, $11, $4, $5, $6, $3, $1, $2}') \
+          >>  $dir2/clean/$1.chrall.tmp1
+    done
+
+  #compute EAF
+    cat $dir2/clean/$1.chrall.tmp1 | awk 'BEGIN{FS="\t"; OFS="\t"}{if ($4 == $10) 
+                                                                      print $1, $2, $3, $4, $5, $11, $6, $7, $8, $9; 
+                                                                    else 
+                                                                      print $1, $2, $3, $4, $5, 1 - $11, $6, $7, $8, $9;}' \
+        >  $dir2/clean/$1.chrall.tmp2
+
+  #clean
+    cat <(cat $dir2/clean/$1.chrall.tmp2 | sed -n 1p | awk 'BEGIN{FS="\t"; OFS="\t"}{print "SNP", "CHR", "POS", "EA", "NEA", "EAF", "BETA", "SE", "P", "N"}') \
+        <(cat $dir2/clean/$1.chrall.tmp2) \
+        | gzip > $dir2/clean/$1.sumstats.gz
+##
+
