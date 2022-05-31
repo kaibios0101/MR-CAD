@@ -24,18 +24,18 @@ Run the following scripts sequentially to compute SNP-based heritability and gen
 1. `1_heritability_EAS.sh`: compute SNP-based heritability of each trait in East Asian population.
 2. `1_heritability_EUR.sh`: compute SNP-based heritability of each trait in European population.
 3. `2_genetic_correlation_EAS.sh`: compute genetic correlations among traits in East Asian population.
-4. `2_genetic_correlation_EUR.sh`: compute genetic correlations among traits in East Asian population.
+4. `2_genetic_correlation_EUR.sh`: compute genetic correlations among traits in European population.
 
 ## 3_MR_analysis
 
-Run the following scripts sequentially to select candidate instrumental variables (IVs), and perform univariable MR (UVMR) and multivariable MR (MVMR) analyses. **Specify the working directory at the start of each script**.
+Run the following scripts sequentially to select candidate instrumental variables (IVs), and perform univariable MR (UVMR) and multivariable MR (MVMR) analysis. **Specify the working directory at the start of each script**.
 
 1. `1_candidate_IVs`: This directory includes corresponding codes to select candidate IVs for each risk factor (exposure).
 
    - `1_candidate_IVs_select.sh`: Shell script of selecting candidate IVs.
-2. `2_UVMR`: This directory includes corresponding codes to perform univariable MR (UVMR) analyses.
+2. `2_UVMR`: This directory includes corresponding codes to perform univariable MR (UVMR) analysis.
 
    * `1_UVMR_qsub.sh`: Shell script of all UVMR analysis jobs and reverse UVMR analysis jobs.
-3. `3_MVMR`: This directory includes corresponding codes to perform multivariable MR (MVMR) analyses.
+3. `3_MVMR`: This directory includes corresponding codes to perform multivariable MR (MVMR) analysis.
 
    * `1_MVMR_qsub.sh`: Shell script of all MVMR analysis jobs.
