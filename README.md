@@ -1,4 +1,4 @@
-# MR of coronary artery disease
+# MR of Coronary Artery Disease
 
 This repository includes scripts to reproduce the main results presented in the following paper:
 
