@@ -4,7 +4,7 @@ This repository includes scripts to reproduce the main results presented in the 
 
 Kai Wang, Xian Shi, Ziwei Zhu, Xingjie Hao, Liangkai Chen, Shanshan Cheng, Roger S. Y. Foo and Chaolong Wang*. Mendelian randomization analysis of 37 clinical factors and coronary artery disease in East Asian and European populations. *Genome Medicine*.
 
-In the following sections, we will describe step by step how to reproduce the results. The scripts are placed into three directories. Please enter into each of these directories and run the scripts according to the description described below. **The scripts here are meant for reproduction of the results in the paper only.**
+In the following sections, we will describe step by step how to reproduce the results. The scripts are placed into three directories. Please enter into each of these directories and run the scripts according to the description described below. **The scripts here are meant for reproduction of the results in the paper.**
 
 ## 1_data_preparation
 
